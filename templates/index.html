@@ -1,203 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Task Planner</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #a5a8aa 0%, #f0f9ff 100%);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loader {
-      border: 4px solid rgba(0, 0, 0, .1);
-      border-left-color: #3162b1;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      animation: spin 0.9s linear infinite;
-    }
-    @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
-    .btn-animate:hover {
-      box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
-      transform: scale(1.03);
-    }
-    header { animation: fadeInUp 1s ease-in-out; }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-    }
-    .glass-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
-    }
-    * { transition: all 0.25s ease; }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-thumb {
-      background: #3b82f6;
-      border-radius: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #a5a8aa 0%, #f0f9ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader {
+            border: 4px solid rgba(0, 0, 0, .1);
+            border-left-color: #3162b1;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
+        .btn-animate { transition: all 0.3s ease; }
+        .btn-animate:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+            transform: scale(1.03);
+        }
+        header { animation: fadeInUp 1s ease-in-out; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .task-card {
+            transition: all 0.3s ease;
+        }
+        .task-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
+        }
+        /* Style for the dropdown arrow */
+        details summary::-webkit-details-marker {
+            display: none; 
+        }
+        details[open] summary svg {
+            transform: rotate(180deg);
+        }
+        * { transition: all 0.25s ease; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl flex flex-col">
-    <header class="text-center mb-10">
-      <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 drop-shadow-sm">Smart Task Planner</h1>
-      <p class="mt-3 text-lg text-gray-700">Breaking your goals into actionable tasks with timelines using AI reasoning..</p>
-    </header>
-    <main class="glass-card rounded-2xl shadow-xl p-8 flex-grow border border-blue-100">
-      <form id="goal-form">
-        <div class="flex flex-col">
-          <label for="goal-input" class="mb-2 font-semibold text-gray-700 text-lg">Enter your goal:</label>
-          <textarea id="goal-input" name="goal" rows="3" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none shadow-sm" placeholder="type your task/goal here"></textarea>
-        </div>
-        <button type="submit" id="submit-button" class="mt-5 w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl btn-animate hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-          Create my plan
-        </button>
-      </form>
-      <div id="response-container" class="mt-10">
-        <div id="loader" class="hidden flex flex-col items-center justify-center text-center space-y-3">
-          <div class="loader"></div>
-          <p class="text-gray-600 font-medium">Making a specific plan for your goal.</p>
-        </div>
-        <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg mt-4 animate-fade-in shadow-sm">
-          <p><strong class="font-bold">Oops!! Something went wrong.</strong> <span id="error-text"></span></p>
-        </div>
-        <div id="results" class="hidden animate-fade-in mt-8">
-          <h2 class="text-3xl font-bold mb-5 border-b border-gray-200 pb-3 text-gray-800">Your Action Plan</h2>
-          <div id="task-list" class="space-y-5"></div>
-        </div>
-      </div>
-    </main>
-    <footer class="text-center py-6 text-gray-600 text-sm mt-8">
-      <p>Made By - <span class="font-semibold text-blue-600">Aryan Chauhan (22BCI0126)</span></p>
-    </footer>
-  </div>
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl flex flex-col">
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 drop-shadow-sm">Smart Task Planner</h1>
+            <p class="mt-3 text-lg text-gray-700">Breaking your goals into actionable tasks with AI.</p>
+        </header>
 
-  <script>
-    const goalForm = document.getElementById('goal-form');
-    const goalInput = document.getElementById('goal-input');
-    const submitButton = document.getElementById('submit-button');
-    const loader = document.getElementById('loader');
-    const errorMessage = document.getElementById('error-message');
-    const errorText = document.getElementById('error-text');
-    const resultsContainer = document.getElementById('results');
-    const taskList = document.getElementById('task-list');
+        <main class="glass-card rounded-2xl shadow-xl p-8 flex-grow border border-blue-100">
 
-    goalForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const goal = goalInput.value.trim();
-      if (!goal) {
-        showError("Please enter a goal before generating a plan.");
-        return;
-      }
-      submitButton.disabled = true;
-      submitButton.textContent = 'Generating...';
-      resultsContainer.classList.add('hidden');
-      errorMessage.classList.add('hidden');
-      taskList.innerHTML = '';
-      loader.classList.remove('hidden');
-      try {
-        const apiUrl = 'http://127.0.0.1:5001/plan';
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ goal: goal }),
+            <!-- Section for Saved Plans -->
+            <div id="saved-plans-container" class="animate-fade-in">
+                <div class="flex justify-between items-center mb-5 border-b border-gray-200 pb-3">
+                    <h2 class="text-3xl font-bold text-gray-800">Your Saved Plans</h2>
+                    <button id="clear-plans-button" class="text-sm bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">Clear All</button>
+                </div>
+                <div id="saved-plans-list" class="space-y-4">
+                    <p id="no-saved-plans" class="text-gray-500 italic">No plans saved yet. Create one below!</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-300 my-8"></div>
+            
+            <!-- Section for Creating a New Plan -->
+            <form id="goal-form">
+                <div class="flex flex-col">
+                    <label for="goal-input" class="mb-2 font-semibold text-gray-700 text-lg">Enter your goal:</label>
+                    <textarea id="goal-input" name="goal" rows="3" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none shadow-sm" placeholder="type your task/goal here"></textarea>
+                </div>
+                <button type="submit" id="submit-button" class="mt-5 w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl btn-animate hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Create my plan
+                </button>
+            </form>
+
+            <div id="response-container" class="mt-10">
+                <div id="loader" class="hidden flex flex-col items-center justify-center text-center space-y-3">
+                    <div class="loader"></div>
+                    <p class="text-gray-600 font-medium">Making a specific plan for your goal.</p>
+                </div>
+                <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg mt-4 animate-fade-in shadow-sm">
+                    <p><strong class="font-bold">Oops!! Something went wrong.</strong> <span id="error-text"></span></p>
+                </div>
+                <div id="results" class="hidden animate-fade-in mt-8">
+                    <h2 class="text-3xl font-bold mb-5 border-b border-gray-200 pb-3 text-gray-800">Your New Action Plan</h2>
+                    <div id="task-list" class="space-y-5"></div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="text-center py-6 text-gray-600 text-sm mt-8">
+            <p>Made By - <span class="font-semibold text-blue-600">Aryan Chauhan (22BCI0126)</span></p>
+        </footer>
+    </div>
+
+    <script>
+        const goalForm = document.getElementById('goal-form');
+        const goalInput = document.getElementById('goal-input');
+        const submitButton = document.getElementById('submit-button');
+        const loader = document.getElementById('loader');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const resultsContainer = document.getElementById('results');
+        const taskList = document.getElementById('task-list');
+        const savedPlansList = document.getElementById('saved-plans-list');
+        const noSavedPlansMsg = document.getElementById('no-saved-plans');
+        const clearPlansButton = document.getElementById('clear-plans-button');
+
+        const API_URL = 'http://127.0.0.1:5001/plan';
+        const STORAGE_KEY = 'smartTaskPlanner_plans';
+
+        // --- localStorage Functions ---
+        function getPlansFromStorage() {
+            const plansJSON = localStorage.getItem(STORAGE_KEY);
+            return plansJSON ? JSON.parse(plansJSON) : [];
+        }
+
+        function savePlansToStorage(plans) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
+        }
+
+        // --- Main Display Logic ---
+        function displayAllSavedPlans() {
+            const plans = getPlansFromStorage();
+            savedPlansList.innerHTML = ''; 
+
+            if (plans.length > 0) {
+                noSavedPlansMsg.classList.add('hidden');
+                clearPlansButton.disabled = false;
+                plans.forEach(plan => {
+                    const planElement = createPlanElement(plan.goal, plan.tasks);
+                    savedPlansList.appendChild(planElement);
+                });
+            } else {
+                savedPlansList.appendChild(noSavedPlansMsg);
+                noSavedPlansMsg.classList.remove('hidden');
+                clearPlansButton.disabled = true;
+            }
+        }
+
+        function createPlanElement(goal, tasks, isOpen = false) {
+            const container = document.createElement('details');
+            container.className = 'bg-white/60 rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300';
+            container.open = isOpen;
+
+            const tasksHtml = tasks.map((task, index) => {
+                const colorClasses = ['bg-blue-100 text-blue-800', 'bg-green-100 text-green-800', 'bg-purple-100 text-purple-800', 'bg-orange-100 text-orange-800', 'bg-pink-100 text-pink-800'];
+                const badgeColor = colorClasses[index % colorClasses.length];
+                const dependenciesHtml = task.dependencies?.length
+                    ? `<details class="mt-3 bg-gray-50/80 rounded-lg p-3">
+                         <summary class="cursor-pointer text-sm font-semibold text-gray-700 hover:text-blue-600">
+                           Show Prerequisites (${task.dependencies.length})
+                         </summary>
+                         <ul class="list-disc list-inside text-sm text-gray-600 mt-2 space-y-1">
+                           ${task.dependencies.map(dep => `<li>${dep}</li>`).join('')}
+                         </ul>
+                       </details>`
+                    : `<p class="mt-3 text-sm italic text-gray-500">No Prerequisites</p>`;
+                return `
+                <div class="task-card relative p-6 bg-white/80 border border-gray-200 rounded-2xl shadow-md">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white font-bold rounded-full shadow-md">${index + 1}</div>
+                            <h3 class="text-lg sm:text-xl font-semibold text-gray-900">${task.task}</h3>
+                        </div>
+                        <span class="flex-shrink-0 ${badgeColor} text-xs font-medium px-3 py-1.5 rounded-full mt-2 sm:mt-0">${task.timeline}</span>
+                    </div>
+                    ${dependenciesHtml}
+                </div>`;
+            }).join('');
+
+            container.innerHTML = `
+                <summary class="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100/50">
+                    <h3 class="text-xl font-bold text-gray-900">${goal}</h3>
+                    <svg class="w-6 h-6 transform transition-transform duration-300 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </summary>
+                <div class="p-4 border-t border-gray-200">
+                    <div class="space-y-5">${tasksHtml}</div>
+                </div>
+            `;
+            return container;
+        }
+
+        function displayNewPlan(tasks) {
+            resultsContainer.classList.remove('hidden');
+            taskList.innerHTML = ''; // Clear previous results
+            const planElement = createPlanElement("Your New Action Plan", tasks, true); // Create it as open
+            taskList.appendChild(planElement);
+             
+            const summary = document.createElement('div');
+            summary.className = 'mt-8 text-center text-gray-700 italic';
+            summary.innerHTML = `<p>✅ ${tasks.length} tasks generated and saved! See it in 'Your Saved Plans' above.</p>`;
+            taskList.appendChild(summary);
+        }
+        
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', displayAllSavedPlans);
+
+        clearPlansButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete all saved plans? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                displayAllSavedPlans();
+            }
         });
-        if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.error || `HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const planText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!planText) throw new Error("Could not find a valid plan in the AI response.");
-        const plan = JSON.parse(planText);
-        if (plan.tasks && plan.tasks.length > 0) {
-          displayPlan(plan.tasks);
-        } else {
-          showError("The AI couldn't generate a plan for this goal. Try rephrasing it.");
-        }
-      } catch (error) {
-        console.error('Error fetching plan:', error);
-        showError(error.message || "An unknown error occurred. Make sure your backend is running.");
-      } finally {
-        loader.classList.add('hidden');
-        submitButton.disabled = false;
-        submitButton.textContent = 'Generate Plan';
-      }
-    });
 
-   function displayPlan(tasks) {
-  resultsContainer.classList.remove('hidden');
-  taskList.innerHTML = ''; 
+        goalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const goal = goalInput.value.trim();
+            if (!goal) {
+                showError("Please enter a goal before generating a plan.");
+                return;
+            }
+            submitButton.disabled = true;
+            submitButton.textContent = 'Generating...';
+            resultsContainer.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            taskList.innerHTML = '';
+            loader.classList.remove('hidden');
 
-  tasks.forEach((task, index) => {
-    const taskCard = document.createElement('div');
-    taskCard.className =
-      'relative p-6 bg-white/80 border border-gray-200 rounded-2xl shadow-md animate-fade-in hover:shadow-lg hover:-translate-y-1 transition-all duration-300';
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ goal: goal }),
+                });
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.error || `HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                const planText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!planText) throw new Error("Could not find a valid plan in the AI response.");
+                
+                const plan = JSON.parse(planText);
+                if (plan.tasks && plan.tasks.length > 0) {
+                    const newPlan = { goal: goal, tasks: plan.tasks };
+                    const allPlans = getPlansFromStorage();
+                    allPlans.unshift(newPlan);
+                    savePlansToStorage(allPlans);
 
-    taskCard.style.animationDelay = `${index * 0.08}s`;
-
-    const colorClasses = [
-      'bg-blue-100 text-blue-800',
-      'bg-green-100 text-green-800',
-      'bg-purple-100 text-purple-800',
-      'bg-orange-100 text-orange-800',
-      'bg-pink-100 text-pink-800'
-    ];
-    const badgeColor = colorClasses[index % colorClasses.length];
-
-    const dependenciesHtml = task.dependencies?.length
-      ? `
-        <details class="mt-3 bg-gray-50 rounded-lg p-3">
-          <summary class="cursor-pointer text-sm font-semibold text-gray-700 hover:text-blue-600">
-            Show Prerequisites (${task.dependencies.length})
-          </summary>
-          <ul class="list-disc list-inside text-sm text-gray-600 mt-2 space-y-1">
-            ${task.dependencies.map(dep => `<li>${dep}</li>`).join('')}
-          </ul>
-        </details>`
-      : `<p class="mt-3 text-sm italic text-gray-500">No Prerequisites</p>`;
-
-    taskCard.innerHTML = `
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div class="flex items-center gap-3">
-          <div class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white font-bold rounded-full shadow-md">
-            ${index + 1}
-          </div>
-          <h3 class="text-lg sm:text-xl font-semibold text-gray-900">${task.task}</h3>
-        </div>
-        <span class="flex-shrink-0 ${badgeColor} text-xs font-medium px-3 py-1.5 rounded-full mt-2 sm:mt-0">
-          ${task.timeline}
-        </span>
-      </div>
-      ${dependenciesHtml}
-    `;
-
-    taskList.appendChild(taskCard);
-  });
-
-  const summary = document.createElement('div');
-  summary.className = 'mt-8 text-center text-gray-700 italic';
-  summary.innerHTML = `<p>✅ ${tasks.length} tasks generated — follow them step-by-step for successful goal completion!</p>`;
-  taskList.appendChild(summary);
-}
-
-
-    function showError(message) {
-      errorText.textContent = message;
-      errorMessage.classList.remove('hidden');
-    }
-  </script>
+                    displayNewPlan(plan.tasks);
+                    displayAllSavedPlans();
+                    goalInput.value = '';
+                } else {
+                    showError("The AI couldn't generate a plan for this goal. Try rephrasing it.");
+                }
+            } catch (error) {
+                console.error('Error fetching plan:', error);
+                showError(error.message || "An unknown error occurred. Make sure your backend is running.");
+            } finally {
+                loader.classList.add('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Create my plan';
+            }
+        });
+    </script>
 </body>
 </html>
+
