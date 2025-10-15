@@ -7,7 +7,7 @@ UI:
 
 output:
 <img width="1915" height="951" alt="image" src="https://github.com/user-attachments/assets/258b18c8-a9c0-4aae-8e1d-459f4582dfce" />
-
+<img width="1919" height="947" alt="image" src="https://github.com/user-attachments/assets/7cd4bd53-7abc-4fec-a3e4-f161ecb9a2b0" />
 
 Features
 🎯 AI-Powered Planning: Leverages the Google Gemini API to understand goals and create structured, logical plans.
