@@ -1,190 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Task Planner</title>
-    <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for a modern typeface -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Custom styles */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Simple spinning animation for the loader element */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .loader {
-            border: 4px solid rgba(0, 0, 0, .1);
-            border-left-color: #3b82f6; /* Tailwind's blue-500 */
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Task Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #a5a8aa 0%, #f0f9ff 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader {
+      border: 4px solid rgba(0, 0, 0, .1);
+      border-left-color: #3162b1;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeInUp 0.5s ease-out forwards; }
+    .btn-animate:hover {
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+      transform: scale(1.03);
+    }
+    header { animation: fadeInUp 1s ease-in-out; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
+    }
+    * { transition: all 0.25s ease; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="text-gray-800">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl flex flex-col">
+    <header class="text-center mb-10">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 drop-shadow-sm">Smart Task Planner</h1>
+      <p class="mt-3 text-lg text-gray-700">Breaking your goals into actionable tasks with timelines using AI reasoning..</p>
+    </header>
+    <main class="glass-card rounded-2xl shadow-xl p-8 flex-grow border border-blue-100">
+      <form id="goal-form">
+        <div class="flex flex-col">
+          <label for="goal-input" class="mb-2 font-semibold text-gray-700 text-lg">Enter your goal:</label>
+          <textarea id="goal-input" name="goal" rows="3" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none shadow-sm" placeholder="type your task/goal here"></textarea>
+        </div>
+        <button type="submit" id="submit-button" class="mt-5 w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl btn-animate hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+          Create my plan
+        </button>
+      </form>
+      <div id="response-container" class="mt-10">
+        <div id="loader" class="hidden flex flex-col items-center justify-center text-center space-y-3">
+          <div class="loader"></div>
+          <p class="text-gray-600 font-medium">Making a specific plan for your goal.</p>
+        </div>
+        <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg mt-4 animate-fade-in shadow-sm">
+          <p><strong class="font-bold">Oops!! Something went wrong.</strong> <span id="error-text"></span></p>
+        </div>
+        <div id="results" class="hidden animate-fade-in mt-8">
+          <h2 class="text-3xl font-bold mb-5 border-b border-gray-200 pb-3 text-gray-800">Your Action Plan</h2>
+          <div id="task-list" class="space-y-5"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="text-center py-6 text-gray-600 text-sm mt-8">
+      <p>Made By - <span class="font-semibold text-blue-600">Aryan Chauhan (22BCI0126)</span></p>
+    </footer>
+  </div>
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl min-h-screen flex flex-col">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Smart Task Planner</h1>
-            <p class="mt-3 text-lg text-gray-600">Break down your biggest goals into actionable steps with AI.</p>
-        </header>
+  <script>
+    const goalForm = document.getElementById('goal-form');
+    const goalInput = document.getElementById('goal-input');
+    const submitButton = document.getElementById('submit-button');
+    const loader = document.getElementById('loader');
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    const resultsContainer = document.getElementById('results');
+    const taskList = document.getElementById('task-list');
 
-        <main class="bg-white rounded-xl shadow-lg p-6 md:p-8 flex-grow">
-            <!-- Form for user to input their goal -->
-            <form id="goal-form">
-                <div class="flex flex-col">
-                    <label for="goal-input" class="mb-2 font-semibold text-gray-700">Enter your goal:</label>
-                    <textarea id="goal-input" name="goal" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200" placeholder="e.g., Launch a new mobile app in 3 months"></textarea>
-                </div>
-                <button type="submit" id="submit-button" class="mt-4 w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-[1.02] active:scale-[0.98]">
-                    Generate Plan
-                </button>
-            </form>
-
-            <!-- This container holds the loader, error messages, and results -->
-            <div id="response-container" class="mt-8">
-                <!-- Loader: Shown while waiting for the API response -->
-                <div id="loader" class="hidden flex flex-col items-center justify-center text-center">
-                    <div class="loader mb-4"></div>
-                    <p class="text-gray-600 font-medium">AI is thinking... Your plan will be ready shortly.</p>
-                </div>
-
-                <!-- Error Message: Shown if the API call fails -->
-                <div id="error-message" class="hidden p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg">
-                    <p><strong class="font-bold">Oops! Something went wrong.</strong> <span id="error-text"></span></p>
-                </div>
-                
-                <!-- Results: Container where the generated plan is displayed -->
-                <div id="results" class="hidden">
-                    <h2 class="text-2xl font-bold mb-4 border-b border-gray-200 pb-2">Your Action Plan:</h2>
-                    <div id="task-list" class="space-y-4">
-                        <!-- Task cards will be dynamically injected here by JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <footer class="text-center py-6 text-gray-500 text-sm">
-            <p>Powered by Gemini AI</p>
-        </footer>
-    </div>
-
-    <script>
-        // Get references to all necessary DOM elements
-        const goalForm = document.getElementById('goal-form');
-        const goalInput = document.getElementById('goal-input');
-        const submitButton = document.getElementById('submit-button');
-        const loader = document.getElementById('loader');
-        const errorMessage = document.getElementById('error-message');
-        const errorText = document.getElementById('error-text');
-        const resultsContainer = document.getElementById('results');
-        const taskList = document.getElementById('task-list');
-
-        // Add event listener for the form submission
-        goalForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent the default form reload
-            const goal = goalInput.value.trim();
-            if (!goal) {
-                showError("Please enter a goal before generating a plan.");
-                return;
-            }
-
-            // --- UI State Update: Start Loading ---
-            submitButton.disabled = true;
-            submitButton.textContent = 'Generating...';
-            resultsContainer.classList.add('hidden');
-            errorMessage.classList.add('hidden');
-            taskList.innerHTML = '';
-            loader.classList.remove('hidden');
-
-            try {
-                // The URL for the local Flask backend
-                const apiUrl = 'http://127.0.0.1:5001/plan';
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ goal: goal }),
-                });
-
-                if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error || `HTTP error! Status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                // Extract the plan from the complex Gemini response structure
-                const planText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!planText) {
-                    throw new Error("Could not find a valid plan in the AI response. It might be empty or malformed.");
-                }
-                
-                // The plan text is a JSON string, so it needs to be parsed
-                const plan = JSON.parse(planText);
-                
-                if (plan.tasks && plan.tasks.length > 0) {
-                    displayPlan(plan.tasks);
-                } else {
-                    showError("The AI couldn't generate a plan for this goal. Please try rephrasing it for better results.");
-                }
-
-            } catch (error) {
-                console.error('Error fetching plan:', error);
-                showError(error.message || "An unknown error occurred. Please check the console and ensure the backend server is running.");
-            } finally {
-                // --- UI State Update: End Loading ---
-                loader.classList.add('hidden');
-                submitButton.disabled = false;
-                submitButton.textContent = 'Generate Plan';
-            }
+    goalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const goal = goalInput.value.trim();
+      if (!goal) {
+        showError("Please enter a goal before generating a plan.");
+        return;
+      }
+      submitButton.disabled = true;
+      submitButton.textContent = 'Generating...';
+      resultsContainer.classList.add('hidden');
+      errorMessage.classList.add('hidden');
+      taskList.innerHTML = '';
+      loader.classList.remove('hidden');
+      try {
+        const apiUrl = 'http://127.0.0.1:5001/plan';
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ goal: goal }),
         });
-
-        // Function to render the tasks on the page
-        function displayPlan(tasks) {
-            resultsContainer.classList.remove('hidden');
-            tasks.forEach(task => {
-                const taskCard = document.createElement('div');
-                taskCard.className = 'p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm animate-fade-in';
-
-                let dependenciesHtml = '';
-                if (task.dependencies && task.dependencies.length > 0) {
-                    dependenciesHtml = `
-                        <div class="mt-3">
-                            <h4 class="text-sm font-semibold text-gray-600">Dependencies:</h4>
-                            <ul class="list-disc list-inside text-sm text-gray-500 mt-1">
-                                ${task.dependencies.map(dep => `<li>${dep}</li>`).join('')}
-                            </ul>
-                        </div>`;
-                } else {
-                     dependenciesHtml = `
-                        <div class="mt-3">
-                            <p class="text-sm italic text-gray-500">No dependencies</p>
-                        </div>`;
-                }
-
-                taskCard.innerHTML = `
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-2">
-                        <h3 class="text-lg font-semibold text-gray-800 pr-4">${task.task}</h3>
-                        <span class="flex-shrink-0 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">${task.timeline}</span>
-                    </div>
-                    ${dependenciesHtml}
-                `;
-                taskList.appendChild(taskCard);
-            });
+        if (!response.ok) {
+          const errData = await response.json();
+          throw new Error(errData.error || `HTTP error! Status: ${response.status}`);
         }
-
-        // Function to display an error message
-        function showError(message) {
-            errorText.textContent = message;
-            errorMessage.classList.remove('hidden');
+        const data = await response.json();
+        const planText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!planText) throw new Error("Could not find a valid plan in the AI response.");
+        const plan = JSON.parse(planText);
+        if (plan.tasks && plan.tasks.length > 0) {
+          displayPlan(plan.tasks);
+        } else {
+          showError("The AI couldn't generate a plan for this goal. Try rephrasing it.");
         }
-    </script>
+      } catch (error) {
+        console.error('Error fetching plan:', error);
+        showError(error.message || "An unknown error occurred. Make sure your backend is running.");
+      } finally {
+        loader.classList.add('hidden');
+        submitButton.disabled = false;
+        submitButton.textContent = 'Generate Plan';
+      }
+    });
+
+   function displayPlan(tasks) {
+  resultsContainer.classList.remove('hidden');
+  taskList.innerHTML = ''; 
+
+  tasks.forEach((task, index) => {
+    const taskCard = document.createElement('div');
+    taskCard.className =
+      'relative p-6 bg-white/80 border border-gray-200 rounded-2xl shadow-md animate-fade-in hover:shadow-lg hover:-translate-y-1 transition-all duration-300';
+
+    taskCard.style.animationDelay = `${index * 0.08}s`;
+
+    const colorClasses = [
+      'bg-blue-100 text-blue-800',
+      'bg-green-100 text-green-800',
+      'bg-purple-100 text-purple-800',
+      'bg-orange-100 text-orange-800',
+      'bg-pink-100 text-pink-800'
+    ];
+    const badgeColor = colorClasses[index % colorClasses.length];
+
+    const dependenciesHtml = task.dependencies?.length
+      ? `
+        <details class="mt-3 bg-gray-50 rounded-lg p-3">
+          <summary class="cursor-pointer text-sm font-semibold text-gray-700 hover:text-blue-600">
+            Show Prerequisites (${task.dependencies.length})
+          </summary>
+          <ul class="list-disc list-inside text-sm text-gray-600 mt-2 space-y-1">
+            ${task.dependencies.map(dep => `<li>${dep}</li>`).join('')}
+          </ul>
+        </details>`
+      : `<p class="mt-3 text-sm italic text-gray-500">No Prerequisites</p>`;
+
+    taskCard.innerHTML = `
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white font-bold rounded-full shadow-md">
+            ${index + 1}
+          </div>
+          <h3 class="text-lg sm:text-xl font-semibold text-gray-900">${task.task}</h3>
+        </div>
+        <span class="flex-shrink-0 ${badgeColor} text-xs font-medium px-3 py-1.5 rounded-full mt-2 sm:mt-0">
+          ${task.timeline}
+        </span>
+      </div>
+      ${dependenciesHtml}
+    `;
+
+    taskList.appendChild(taskCard);
+  });
+
+  const summary = document.createElement('div');
+  summary.className = 'mt-8 text-center text-gray-700 italic';
+  summary.innerHTML = `<p>✅ ${tasks.length} tasks generated — follow them step-by-step for successful goal completion!</p>`;
+  taskList.appendChild(summary);
+}
+
+
+    function showError(message) {
+      errorText.textContent = message;
+      errorMessage.classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>
