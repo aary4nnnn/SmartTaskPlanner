@@ -55,13 +55,17 @@ Built with **Flask**, communicating seamlessly with Gemini API.
 SmartTaskPlanner/
 │
 ├── app.py               # Flask backend (Gemini API integration)
+│
 ├── templates/
 │   └── index.html       # Frontend UI
+│
 ├── static/
 │   ├── css/             # Tailwind styling
 │   ├── js/              # Client-side logic
 │   └── storage/         # Stores generated tasks (new feature)
+│
 └── README.md
+
 
 
 
