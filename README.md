@@ -51,6 +51,7 @@ Built with **Flask**, communicating seamlessly with Gemini API.
 | **AI Model** | Google Gemini API |
 
 ---
+'''
 📁 Project Structure
 SmartTaskPlanner/
 │
@@ -66,7 +67,7 @@ SmartTaskPlanner/
 │
 └── README.md
 
-
+'''
 
 
 
