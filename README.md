@@ -1,4 +1,5 @@
-Smart Task Planner 🤖✨
+#Smart Task Planner 🤖✨
+
 An AI-powered web application that takes a high-level goal and breaks it down into a detailed, actionable plan with tasks, timelines, and dependencies.
 
 ^ Add a screenshot or GIF of your application here!
