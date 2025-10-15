@@ -97,31 +97,37 @@ Follow these steps to run the project locally:
 
 ### 1️⃣ Clone the Repository
 
-git clone https://github.com/aary4nnnn/SmartTaskPlanner.git
-cd SmartTaskPlanner
+-git clone https://github.com/aary4nnnn/SmartTaskPlanner.git
+-cd SmartTaskPlanner
 
 2️⃣ Backend Setup
 Create and Activate a Virtual Environment
 
-For macOS/Linux:
+-For macOS/Linux:
+
 python3 -m venv venv
 source venv/bin/activate
 
-For Windows:
+-For Windows:
+
 python -m venv venv
 .\venv\Scripts\activate
 
-Install Dependencies:
+-Install Dependencies:
+
 pip install Flask Flask-Cors requests
 
 ###Set Your API Key
-macOS/Linux:
+-macOS/Linux:
+
 export GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
 
-Windows (PowerShell):
+-Windows (PowerShell):
+
 $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
 
-Run the Flask Server
+-Run the Flask Server
+
 flask --app app run --port=5001
 
 Backend will be available at http://127.0.0.1:5001
@@ -129,6 +135,7 @@ Backend will be available at http://127.0.0.1:5001
 3️⃣ Frontend Setup
 
 Simply open index.html in your browser.
+
 For best results, use Chrome, Edge, or Firefox.
 
 🚀 Usage
