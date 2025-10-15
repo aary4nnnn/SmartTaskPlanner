@@ -141,9 +141,14 @@ For best results, use Chrome, Edge, or Firefox.
 🚀 Usage
 
 Ensure the Flask backend is running.
+
 Open index.html in your browser.
+
 Enter your goal (e.g., "Build a personal portfolio website", "Learn Python in 1 month").
+
 Click “Create my plan”.
+
 View your structured AI-generated task plan instantly.
+
 All previous tasks are automatically saved and retrievable.
 
