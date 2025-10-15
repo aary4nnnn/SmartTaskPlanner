@@ -31,7 +31,7 @@ Each plan includes:
 - 🕒 Estimated timelines  
 - 🔗 Dependency mapping  
 
-✅ **Task History Storage (NEW)**  
+✅ **Task History Storage**  
 All previously generated plans are automatically **stored locally**, allowing users to **view their older task lists anytime** — no data loss on refresh!
 
 ✅ **Modern, Responsive UI**  
