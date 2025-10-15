@@ -2,7 +2,12 @@
 
 An AI-powered web application that takes a high-level goal and breaks it down into a detailed, actionable plan with tasks, timelines, and dependencies.
 
-^ Add a screenshot or GIF of your application here!
+UI:
+<img width="1919" height="958" alt="image" src="https://github.com/user-attachments/assets/1bf55784-7918-4328-98f1-2cae43b5a398" />
+
+output:
+<img width="1915" height="951" alt="image" src="https://github.com/user-attachments/assets/258b18c8-a9c0-4aae-8e1d-459f4582dfce" />
+
 
 Features
 🎯 AI-Powered Planning: Leverages the Google Gemini API to understand goals and create structured, logical plans.
@@ -24,14 +29,14 @@ Installation & Setup
 Follow these instructions to get the project up and running on your local machine.
 
 Prerequisites
-Python 3.7+
+Python 3.1+
 
 A Google Gemini API Key. You can get one for free from Google AI Studio.
 
 1. Clone the Repository
 First, clone the project to your local machine (or simply download the files).
 
-git clone [https://github.com/your-username/SmartTaskPlanner.git](https://github.com/your-username/SmartTaskPlanner.git)
+git clone [https://github.com/your-username/SmartTaskPlanner.git](https://github.com/aary4nnnn/SmartTaskPlanner.git)
 cd SmartTaskPlanner
 
 2. Backend Setup
@@ -88,7 +93,4 @@ The AI will process your request, and the generated action plan will appear belo
 Contributing
 Contributions are welcome! If you have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
-(You would typically create a new file named LICENSE and put the full MIT license text in it).
