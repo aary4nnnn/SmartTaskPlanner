@@ -1,99 +1,123 @@
-#Smart Task Planner 🤖✨
+# 🧠 Smart Task Planner 🤖✨
 
-An AI-powered web application that takes a high-level goal and breaks it down into a detailed, actionable plan with tasks, timelines, and dependencies.
+An **AI-powered web application** that transforms your goals into structured, actionable task plans — complete with **timelines**, **dependencies**, and now even **persistent task history storage**!
 
-UI:
-<img width="1919" height="958" alt="image" src="https://github.com/user-attachments/assets/1bf55784-7918-4328-98f1-2cae43b5a398" />
+---
 
-output:
-<img width="1915" height="951" alt="image" src="https://github.com/user-attachments/assets/258b18c8-a9c0-4aae-8e1d-459f4582dfce" />
-<img width="1919" height="947" alt="image" src="https://github.com/user-attachments/assets/7cd4bd53-7abc-4fec-a3e4-f161ecb9a2b0" />
-All the task stored.
-<img width="1919" height="934" alt="image" src="https://github.com/user-attachments/assets/62606af3-8bcc-46ed-a5af-65fb7d94c623" />
+## 🌐 UI Preview
+
+## 🖥️ User Interface:
+<img width="1919" height="956" alt="image" src="https://github.com/user-attachments/assets/cb9bfe28-623c-4329-b79f-0bce8f75274b" />
 
 
-Features
-🎯 AI-Powered Planning: Leverages the Google Gemini API to understand goals and create structured, logical plans.
+## 📋 Generated Output:
+<img width="1919" height="948" alt="image" src="https://github.com/user-attachments/assets/340c003e-0e55-4ec6-a7bc-38f293db5a8b" />
+<img width="1919" height="947" alt="image" src="https://github.com/user-attachments/assets/5c31f169-05e7-4e49-9f0b-51afd02b3ef5" />
 
-📑 Detailed Breakdowns: Generates a list of tasks, provides estimated timelines for each, and identifies dependencies between them.
+### 💾 Task History Storage:
+All generated tasks are now **saved and viewable anytime**.
+<img width="1919" height="934" alt="Stored Tasks" src="https://github.com/user-attachments/assets/62606af3-8bcc-46ed-a5af-65fb7d94c623" />
 
-💻 Simple Web Interface: A clean, intuitive, and responsive frontend to input a goal and view the generated plan.
+---
 
-🚀 RESTful Backend: A lightweight Flask API that processes user requests and communicates with the AI model.
+## ✨ Features
 
-Technology Stack
-Backend: Python, Flask, Flask-Cors
+✅ **AI-Powered Planning**  
+Leverages the **Google Gemini API** to understand user goals and generate structured, detailed, and logical project plans.
 
-Frontend: HTML, Tailwind CSS, Vanilla JavaScript
+✅ **Detailed Task Breakdown**  
+Each plan includes:
+- 📑 Clearly defined tasks  
+- 🕒 Estimated timelines  
+- 🔗 Dependency mapping  
 
-AI Model: Google Gemini
+✅ **Task History Storage (NEW)**  
+All previously generated plans are automatically **stored locally**, allowing users to **view their older task lists anytime** — no data loss on refresh!
 
-Installation & Setup
-Follow these instructions to get the project up and running on your local machine.
+✅ **Modern, Responsive UI**  
+A beautiful and responsive **TailwindCSS-based** interface with animations and transitions for a delightful experience.
 
-Prerequisites
-Python 3.1+
+✅ **Lightweight RESTful Backend**  
+Built with **Flask**, communicating seamlessly with Gemini API.
 
-A Google Gemini API Key. You can get one for free from Google AI Studio.
+---
 
-1. Clone the Repository
-First, clone the project to your local machine (or simply download the files).
+## 🧰 Technology Stack
 
-git clone (https://github.com/aary4nnnn/SmartTaskPlanner.git)
+| Component   | Technology Used |
+|--------------|-----------------|
+| **Backend**  | Python, Flask, Flask-Cors |
+| **Frontend** | HTML, Tailwind CSS, Vanilla JavaScript |
+| **AI Model** | Google Gemini API |
+
+---
+📁 Project Structure
+SmartTaskPlanner/
+│
+├── app.py               # Flask backend (Gemini API integration)
+├── templates/
+│   └── index.html       # Frontend UI
+├── static/
+│   ├── css/             # Tailwind styling
+│   ├── js/              # Client-side logic
+│   └── storage/         # Stores generated tasks (new feature)
+└── README.md
+
+
+
+
+## ⚙️ Installation & Setup
+
+Follow these steps to run the project locally:
+
+### 🪶 Prerequisites
+- Python **3.10+**
+- A valid **Google Gemini API Key** (available free at [Google AI Studio](https://aistudio.google.com))
+
+---
+
+### 1️⃣ Clone the Repository
+
+git clone https://github.com/aary4nnnn/SmartTaskPlanner.git
 cd SmartTaskPlanner
 
-2. Backend Setup
-Create and activate a virtual environment:
-Open your terminal in the project directory.
+2️⃣ Backend Setup
+Create and Activate a Virtual Environment
 
-For Unix/macOS:
-
+For macOS/Linux:
 python3 -m venv venv
 source venv/bin/activate
 
 For Windows:
-
 python -m venv venv
 .\venv\Scripts\activate
 
-Install the required Python packages:
-
+Install Dependencies:
 pip install Flask Flask-Cors requests
 
-Set your API Key as an environment variable:
-This is a crucial step. The application will not work without it.
-
-For Unix/macOS:
-
+###Set Your API Key
+macOS/Linux:
 export GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
 
-For Windows (PowerShell):
-
+Windows (PowerShell):
 $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
 
-Note: You must set this variable in the same terminal session from which you run the Flask app.
-
-Run the Flask server:
-In the same terminal, run the following command:
-
+Run the Flask Server
 flask --app app run --port=5001
 
-The backend server will now be running at http://127.0.0.1:5001. Keep this terminal open.
+Backend will be available at http://127.0.0.1:5001
 
-3. Frontend Setup
-Open the index.html file in your web browser.
-You can simply double-click the file in your file explorer. For best results, use a modern browser like Chrome, Firefox, or Edge.
+3️⃣ Frontend Setup
 
-Usage
-Make sure the backend server is running in your terminal.
+Simply open index.html in your browser.
+For best results, use Chrome, Edge, or Firefox.
 
-With index.html open in your browser, type your goal into the text box (e.g., "Launch a new website in 3 weeks" or "Learn Python in 2 months").
+🚀 Usage
 
-Click the Generate Plan button.
-
-The AI will process your request, and the generated action plan will appear below the form.
-
-Contributing
-Contributions are welcome! If you have suggestions for improvements, please feel free to open an issue or submit a pull request.
-
+Ensure the Flask backend is running.
+Open index.html in your browser.
+Enter your goal (e.g., "Build a personal portfolio website", "Learn Python in 1 month").
+Click “Create my plan”.
+View your structured AI-generated task plan instantly.
+All previous tasks are automatically saved and retrievable.
 
