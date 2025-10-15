@@ -36,7 +36,7 @@ A Google Gemini API Key. You can get one for free from Google AI Studio.
 1. Clone the Repository
 First, clone the project to your local machine (or simply download the files).
 
-git clone [https://github.com/your-username/SmartTaskPlanner.git](https://github.com/aary4nnnn/SmartTaskPlanner.git)
+git clone (https://github.com/aary4nnnn/SmartTaskPlanner.git)
 cd SmartTaskPlanner
 
 2. Backend Setup
