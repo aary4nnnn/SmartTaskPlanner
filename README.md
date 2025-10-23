@@ -24,22 +24,22 @@ All generated tasks are now **saved and viewable anytime**.
 
 ## ✨ Features
 
-✅ **AI-Powered Planning**
+1) **AI-Powered Planning**
    - Leverages the **Google Gemini API** to understand user goals and generate structured, detailed, and logical project plans.
 
-✅ **Detailed Task Breakdown**
+2) **Detailed Task Breakdown**
    - Each plan includes:
      - 📑 Clearly defined tasks
      - 🕒 Estimated timelines
      - 🔗 Dependency mapping
 
-✅ **Task History Storage**
+3) **Task History Storage**
    - All previously generated plans are automatically **stored locally**, allowing users to **view their older task lists anytime** — no data loss on refresh!
 
-✅ **Modern, Responsive UI**
+4) **Modern, Responsive UI**
    - A beautiful and responsive **TailwindCSS-based** interface with animations and transitions for a delightful experience.
 
-✅ **Lightweight RESTful Backend**
+5) **Lightweight RESTful Backend**
    - Built with **Flask**, communicating seamlessly with the Gemini API.
 
 ---
@@ -55,26 +55,19 @@ All generated tasks are now **saved and viewable anytime**.
 ---
 
 ## 📁 Project Structure
-
+```
+bash
 SmartTaskPlanner/
 │
-
-├── app.py          # Flask backend (Gemini API integration)
-
-├── templates/
-
-│   └── index.html  # Frontend UI
-
-├── static/
-
-│   ├── css/        # Tailwind styling
-
-│   ├── js/         # Client-side logic
-
-│   └── storage/    # Stores generated tasks (new feature)
-
-└── README.md
-
+├── templates/               # Frontend folder
+│   ├── index.html           # Main frontend UI
+│   ├── script.js            # Client-side logic
+│   └── style.css            # Styling (Tailwind/custom CSS)
+│
+├── app.py                   # Flask backend
+├── README.md                # All about Smart Task Planner
+└── .gitignore               # Git ignored files
+```
 -----
 
 ## ⚙️ Installation & Setup
