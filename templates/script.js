@@ -10,7 +10,7 @@ const goalForm = document.getElementById('goal-form');
         const noSavedPlansMsg = document.getElementById('no-saved-plans');
         const clearPlansButton = document.getElementById('clear-plans-button');
 
-        const API_URL = 'https://smarttaskplanner-backend.onrender.com';
+        const API_URL = 'https://smarttaskplanner-backend.onrender.com/plan';
         const STORAGE_KEY = 'smartTaskPlanner_plans';
 
        // using local storge for storing saved task
