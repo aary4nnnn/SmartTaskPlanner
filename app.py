@@ -1,30 +1,23 @@
 import os
-import json
-import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import google.generativeai as genai
+from google.api_core import exceptions as google_exceptions
 
 app = Flask(__name__)
-
 CORS(app)
 
-API_KEY = os.environ.get("GEMINI_API_KEY", "YOUR_API_KEY_HERE")
-if API_KEY == "YOUR_API_KEY_HERE":
-    print("Warning: GEMINI_API_KEY environment variable not set. Using placeholder.")
-
-API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={API_KEY}"
-
-@app.route('/plan', methods=['POST'])
-def generate_plan():
-    """
-    Receives a goal from the frontend, gets a plan from the Gemini API,
-    and returns it.
-    """
-    if not request.json or 'goal' not in request.json:
-        return jsonify({"error": "Request must be JSON and include a 'goal' field."}), 400
-
-    user_goal = request.json['goal']
-
+model = None
+try:
+    API_KEY = os.environ.get("GEMINI_API_KEY")
+    if not API_KEY:
+        print("Warning: GEMINI_API_KEY environment variable not set.")
+    
+    genai.configure(api_key=API_KEY)
+    
+    generation_config = {
+        "response_mime_type": "application/json",
+    }
     
     system_prompt = """
     You are an expert project manager AI. Your task is to break down a user's goal into a structured, actionable plan.
@@ -37,27 +30,37 @@ def generate_plan():
     Do not include any explanations or text outside of the main JSON object.
     """
 
-    payload = {
-        "contents": [{"parts": [{"text": f"Create a plan for this goal: {user_goal}"}]}],
-        "systemInstruction": {"parts": [{"text": system_prompt}]},
-        "generationConfig": {"responseMimeType": "application/json"}
-    }
-    headers = {'Content-Type': 'application/json'}
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config,
+        system_instruction=system_prompt
+    )
+    print("Gemini model initialized successfully.")
+
+except Exception as e:
+    print(f"Fatal error during app initialization: {e}")
+
+@app.route('/plan', methods=['POST'])
+def generate_plan():
+    if model is None:
+        print("Error: Model was not initialized.")
+        return jsonify({"error": "AI Model not initialized. Check server logs for API key or configuration issues."}), 500
+
+    if not request.json or 'goal' not in request.json:
+        return jsonify({"error": "Request must be JSON and include a 'goal' field."}), 400
+
+    user_goal = request.json['goal']
 
     try:
-        response = requests.post(API_URL, headers=headers, data=json.dumps(payload))
-        response.raise_for_status()  
-        return response.json()
+        response = model.generate_content(f"Create a plan for this goal: {user_goal}")
+        return response.text, 200
 
-    except requests.exceptions.RequestException as e:
-        
-        print(f"Error calling Gemini API: {e}")
+    except google_exceptions.GoogleAPICallError as e:
+        print(f"Error calling Gemini API: {e.code} {e.message}") 
         return jsonify({"error": "Failed to communicate with the AI service."}), 502
     except Exception as e:
-       
-        print(f"An unexpected error occurred: {e}")
+        print(f"An unexpected error occurred: {str(e)}")
         return jsonify({"error": "An internal server error occurred."}), 500
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
-
+    app.run(port=os.environ.get("PORT", 5001), debug=True)
