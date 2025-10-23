@@ -1,4 +1,5 @@
 # 🧠 Smart Task Planner 🤖✨
+# By - Aryan Chauhan (22BCI0126)
 
 **DEMO:** [View Demo Video](https://drive.google.com/file/d/1qtn31QxQbYrerxCOsDsDXqefPalFxAYC/view?usp=drivesdk)
 
