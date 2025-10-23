@@ -10,10 +10,10 @@ const goalForm = document.getElementById('goal-form');
         const noSavedPlansMsg = document.getElementById('no-saved-plans');
         const clearPlansButton = document.getElementById('clear-plans-button');
 
-        const API_URL = 'http://127.0.0.1:5001/plan';
+        const API_URL = 'https://smarttaskplanner-backend.onrender.com';
         const STORAGE_KEY = 'smartTaskPlanner_plans';
 
-        // --- localStorage Functions ---
+       // using local storge for storing saved task
         function getPlansFromStorage() {
             const plansJSON = localStorage.getItem(STORAGE_KEY);
             return plansJSON ? JSON.parse(plansJSON) : [];
@@ -23,7 +23,7 @@ const goalForm = document.getElementById('goal-form');
             localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
         }
 
-        // --- Main Display Logic ---
+        //Display UI code
         function displayAllSavedPlans() {
             const plans = getPlansFromStorage();
             savedPlansList.innerHTML = ''; 
@@ -102,7 +102,7 @@ const goalForm = document.getElementById('goal-form');
             errorMessage.classList.remove('hidden');
         }
 
-        // --- Event Listeners ---
+        //listeners made for events (Event Listeners)
         document.addEventListener('DOMContentLoaded', displayAllSavedPlans);
 
         clearPlansButton.addEventListener('click', () => {
